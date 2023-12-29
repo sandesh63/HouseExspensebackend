@@ -36,12 +36,65 @@ private AdminRepo adminrepo;
 			exspenseData.setWork(exspenseDataDTO.getWork());
 			exspenseData.setReceiver(exspenseDataDTO.getReceiver());
 			exspenseData.setMessage(exspenseDataDTO.getMessage());
-			exspenseDataRepository.saveAndFlush(exspenseData);
-			return "Exspense Data created Successfully ";	
+			Optional<ExspenseData> previousData=exspenseDataRepository.findById(exspenseDataDTO.getId()-1);
+			ExspenseData previosExspenseData=null;
+			previosExspenseData=previousData.get();
+			if(previosExspenseData.getBankBalance()>=exspenseDataDTO.getAmount())
+			{
+				if(previosExspenseData.getInHandBalance()>=exspenseDataDTO.getAmount())
+				{
+					exspenseData.setInHandBalance(previosExspenseData.getInHandBalance()-exspenseDataDTO.getAmount());
+					exspenseData.setBankBalance(previosExspenseData.getBankBalance());
+				}
+				else
+				{
+					double difference=exspenseDataDTO.getAmount()-previosExspenseData.getInHandBalance();
+					exspenseData.setBankBalance(previosExspenseData.getBankBalance()-difference);
+					exspenseData.setInHandBalance(previosExspenseData.getInHandBalance()-(exspenseDataDTO.getAmount()-difference));
+				}
+				exspenseDataRepository.saveAndFlush(exspenseData);
+				return "Exspense Data created Successfully ";		
+			}
+			else
+			{
+				return "Insifficient Bank Balance";
+			}
+			
 		}
 		else
 		{
-			return "Exspense Data creation failed";	
+			if(exspenseDataDTO.getType().equalsIgnoreCase("withdraw"))
+			{
+				Optional<ExspenseData> previousData=exspenseDataRepository.findById(exspenseDataDTO.getId());
+				ExspenseData previosExspenseData=null;
+				ExspenseData newExspenseData=new ExspenseData();
+				previosExspenseData=previousData.get();
+				if(previosExspenseData.getBankBalance()>=exspenseDataDTO.getAmount())
+				{
+					if(previosExspenseData.getInHandBalance()>exspenseDataDTO.getAmount())
+					{
+					newExspenseData.setInHandBalance(previosExspenseData.getInHandBalance()-exspenseDataDTO.getAmount());
+					newExspenseData.setBankBalance(previosExspenseData.getBankBalance());
+					newExspenseData.setId(exspenseDataDTO.getId());
+					exspenseDataRepository.delete(previosExspenseData);
+					exspenseDataRepository.save(newExspenseData);
+					return "Details Updated Successfully";
+					
+				}
+				else
+				{
+					newExspenseData.setBankBalance(previosExspenseData.getBankBalance()-exspenseDataDTO.getAmount());
+					newExspenseData.setInHandBalance(previosExspenseData.getInHandBalance()+exspenseDataDTO.getAmount());
+					newExspenseData.setId(exspenseDataDTO.getId());
+					exspenseDataRepository.delete(previosExspenseData);
+					exspenseDataRepository.save(newExspenseData);
+					return "Details Updated Successfully";
+					
+				}
+			}
+			return "Insufficient Balance";	
+		}
+			return "record not found";
 		}
 	
 	}
