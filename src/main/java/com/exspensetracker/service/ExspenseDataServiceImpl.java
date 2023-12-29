@@ -113,6 +113,8 @@ private AdminRepo adminrepo;
 			exspenseDataDTO.setReceiver(item.getReceiver());
 			exspenseDataDTO.setWork(item.getWork());
 			exspenseDataDTO.setMessage(item.getMessage());
+			exspenseDataDTO.setBankBalance(item.getBankBalance());
+			exspenseDataDTO.setInHandBalance(item.getInHandBalance());
 			exspenseList.add(exspenseDataDTO);
 			
 			
