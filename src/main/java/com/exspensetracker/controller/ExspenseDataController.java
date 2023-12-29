@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.exspensetracker.dto.AdminDTO;
 import com.exspensetracker.dto.ExspenseDataDTO;
 import com.exspensetracker.service.ExspenseDataService;
+import com.exspensetracker.exception.UnauthorizedException;
 
 
 
@@ -35,8 +36,17 @@ public class ExspenseDataController {
 	}
 	@PostMapping("/login")
 	public ResponseEntity<String> adminLogin(@RequestBody AdminDTO adminDTO ){
+		try{
 		ResponseEntity<String> received=exspenseDataService.createLogin(adminDTO);
-		return new ResponseEntity<String>(HttpStatus.OK);
+			return new ResponseEntity<String>(HttpStatus.OK);
+		}
+		catch(UnauthorizedException e)
+			{
+				return new ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("invalid username and password");
+				
+			}
+				
+		
 	}
 
 }
