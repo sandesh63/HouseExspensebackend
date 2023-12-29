@@ -15,6 +15,7 @@ import com.exspensetracker.entity.Admin;
 import com.exspensetracker.entity.ExspenseData;
 import com.exspensetracker.repository.AdminRepo;
 import com.exspensetracker.repository.ExspenseDataRepository;
+import com.exspensetracker.exception.UnauthorizedException;
 
 @Service(value="ExspenseDataService")
 public class ExspenseDataServiceImpl implements ExspenseDataService {
@@ -132,7 +133,7 @@ private AdminRepo adminrepo;
 			return ResponseEntity.ok("login Success");
 			
 		}
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("invalid credentials");
+		throw new UnauthorizedException("Incorrect Password");
 		
 	}
 
