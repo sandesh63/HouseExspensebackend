@@ -14,6 +14,9 @@ private double amount;
 private String work;
 private String receiver;
 private String message;
+	private String type;
+	private double inHandBalance;
+private double bankBalance;
 public int getId() {
 	return id;
 }
@@ -37,6 +40,24 @@ public double getAmount() {
 }
 public void setAmount(double amount) {
 	this.amount = amount;
+}
+	public double getInHandBalance() {
+	return inHandBalance;
+}
+public String getType() {
+	return type;
+}
+public void setType(String type) {
+	this.type = type;
+}
+public void setInHandBalance(double inHandBalance) {
+	this.inHandBalance = inHandBalance;
+}
+public double getBankBalance() {
+	return bankBalance;
+}
+public void setBankBalance(double bankBalance) {
+	this.bankBalance = bankBalance;
 }
 public String getWork() {
 	return work;
